@@ -1,21 +1,16 @@
-terraform {
-  required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "~> 3.0"
-    }
-  }
-}
-
 provider "docker" {}
 
 resource "docker_image" "telecom" {
-  name = "telecom-app"
+  name = "telecom-app:latest"
+  build {
+    context = "../docker"
+  }
 }
 
 resource "docker_container" "telecom_container" {
   name  = "telecom"
-  image = docker_image.telecom.name
+  image = docker_image.telecom.image_id
+
   ports {
     internal = 5000
     external = 5000
